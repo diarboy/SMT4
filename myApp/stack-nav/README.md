@@ -2,6 +2,30 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+myApp/
+└── stack-nav/
+    ├── .gitignore
+    ├── README.md
+    ├── app.json
+    ├── package-lock.json
+    ├── package.json
+    ├── tsconfig.json
+    ├── app/
+    │   ├── _layout.jsx
+    │   ├── explore.jsx
+    │   ├── index.jsx
+    │   ├── profile.jsx
+    │   └── transactions.jsx
+    ├── assets/
+    │   ├── fonts/ (directory)
+    │   ├── icons.js
+    │   └── images/ (directory)
+    ├── components/
+    │   ├── TabBar.jsx
+    │   └── TabBarButton.jsx
+    └── scripts/
+        └── reset-project.js
+
 ## Get started
 
 1. Install dependencies
