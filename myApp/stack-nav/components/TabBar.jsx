@@ -5,7 +5,10 @@ import TabBarButton from './TabBarButton'
 
 const TabBar = ({ state, descriptors, navigation }) => {
     const primaryColor = '#0891b2';
-    const altColor = '#737373';
+  const altColor = '#737373';
+
+const currentRoute = state.routes[state.index].name;
+  if (currentRoute === 'profile') return null;
 
   return (
     <View style={styles.tabbar}>
@@ -88,7 +91,7 @@ const styles = StyleSheet.create({
     tabbar: {
         position: 'absolute',
         bottom: 25,
-        width: '95%',
+        width: '90%',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -104,4 +107,5 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
     }
 })
+
 export default TabBar
