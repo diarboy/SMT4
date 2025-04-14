@@ -3,9 +3,15 @@ import { DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navi
 import { Ionicons } from '@expo/vector-icons';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CustomDrawerContent = (props) => {
   const router = useRouter();
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('token');
+    router.replace('/home/login');
+  };
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
       <View style={styles.header}>
@@ -50,9 +56,7 @@ const CustomDrawerContent = (props) => {
         icon={({ color, size }) => (
           <Ionicons name="log-out-outline" size={size} color={color} />
         )}
-        onPress={() => {
-          props.navigation.navigate('logout');
-        }}
+        onPress={handleLogout}
       />
     </DrawerContentScrollView>
   );

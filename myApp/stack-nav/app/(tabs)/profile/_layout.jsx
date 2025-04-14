@@ -1,6 +1,6 @@
 import { Drawer } from 'expo-router/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import CustomDrawerContent from '../../components/DrawerContent'
+import CustomDrawerContent from '../../../components/DrawerContent'
 
 export default function ProfileLayout() {
   return (
