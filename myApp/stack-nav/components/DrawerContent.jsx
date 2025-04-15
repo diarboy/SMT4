@@ -4,14 +4,24 @@ import { Ionicons } from '@expo/vector-icons';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { supabase } from '../assets/lib/supabase';
 
 const CustomDrawerContent = (props) => {
   const router = useRouter();
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('token');
-    router.replace('/home/login');
+    await AsyncStorage.removeItem('session');
+  
+    const { error } = await supabase.auth.signOut(); 
+  
+    if (error) {
+      console.error('Error logging out from Supabase:', error.message);
+    } else {
+      router.replace('/home/login');
+    }
   };
+
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
       <View style={styles.header}>

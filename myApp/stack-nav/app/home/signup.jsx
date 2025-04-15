@@ -5,7 +5,7 @@ import { colors } from '../../assets/utils/colors';
 import { fonts } from '../../assets/utils/fonts';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../assets/lib/supabase';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Signup() {
   const router = useRouter();
@@ -13,6 +13,7 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSignup = async () => {
     if (!name || !email || !password) {
@@ -29,15 +30,19 @@ export default function Signup() {
         data: { name }
       }
     });
-    
+
     setLoading(false);
 
     if (error) {
       Alert.alert('Gagal', error.message);
     } else {
-      Alert.alert('Berhasil', 'Akun berhasil dibuat. Silakan login.');
+      Alert.alert('Berhasil', 'Akun berhasil dibuat. Selamat datang!');
       await AsyncStorage.setItem('name', data.user?.user_metadata?.name || '');
-      router.replace('/home/login');
+      await AsyncStorage.setItem('email', data.user?.email || '');
+      await AsyncStorage.setItem('token', data.session?.access_token || '');
+      await AsyncStorage.setItem('session', JSON.stringify(data.session));
+
+      router.replace('(tabs)');
     }
   };
 
@@ -50,19 +55,56 @@ export default function Signup() {
       </TouchableOpacity>
 
       <Text style={styles.title}>Buat Akun</Text>
-      <TextInput placeholder="Nama Lengkap" style={styles.input} value={name} onChangeText={setName} />
-      <TextInput placeholder="Email" style={styles.input} value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
-      <TextInput placeholder="Password" style={styles.input} value={password} onChangeText={setPassword} secureTextEntry />
+      <Text style={styles.body}>Daftarkan akun Anda untuk menggunakan layanan ini.</Text>
+      <View style={styles.inputWrapper}>
+        <Ionicons name="person-outline" size={20} color="#999" style={styles.inputIcon} />
+        <TextInput
+          placeholder="Nama Lengkap"
+          value={name}
+          onChangeText={setName}
+          style={styles.input}
+        />
+      </View>
 
-      <TouchableOpacity style={styles.button} onPress={handleSignup}>
+      <View style={styles.inputWrapper}>
+        <Ionicons name="mail-outline" size={20} color="#999" style={styles.inputIcon} />
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
+      </View>
+
+      <View style={styles.inputWrapper}>
+        <Ionicons name="lock-closed-outline" size={20} color="#999" style={styles.inputIcon} />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!showPassword}
+          style={styles.input}
+        />
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeButton}>
+          <Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color="#999" />
+        </TouchableOpacity>
+      </View>
+
+
+      <TouchableOpacity style={styles.button} onPress={handleSignup} disabled={loading}>
         <Text style={styles.buttonText}>{loading ? 'Loading...' : 'Daftar Sekarang'}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.replace('/home/login')}>
-        <Text style={styles.loginText}>
-          Sudah punya akun? <Text style={{ color: colors.primary }}>Login</Text>
-        </Text>
+      <View style={styles.loginContainer}>
+        <Text style={styles.loginText}>Sudah punya akun? </Text>
+        <TouchableOpacity onPress={() => router.replace('/home/login')}>
+          <Text style={styles.loginLink}>
+            <Text style={{ color: colors.primary }}>Login</Text>
+          </Text>
       </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -81,15 +123,35 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: colors.black,
   },
-  input: {
+  body: {
+    fontSize: 14,
+    fontFamily: fonts.Regular,
+    marginBottom: 15,
+    textAlign: 'left',
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#f0f0f0',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
+    borderRadius: 12,
+    marginBottom: 15,
+    paddingHorizontal: 10,
+    height: 60,
+  },
+  inputIcon: {
+    marginRight: 10,
+    marginLeft: 5,
+  },
+  input: {
+    flex: 1,
     fontSize: 16,
     fontFamily: fonts.Regular,
-    borderRadius: 12,
-    marginBottom: 20,
+    paddingVertical: 15,
   },
+  eyeButton: {
+    paddingLeft: 10,
+    paddingRight: 15,
+  },  
   button: {
     backgroundColor: colors.primary,
     paddingVertical: 15,
@@ -102,25 +164,32 @@ const styles = StyleSheet.create({
     fontFamily: fonts.Bold,
     textAlign: 'center',
   },
+  loginContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   loginText: {
     fontSize: 16,
     fontFamily: fonts.Regular,
     textAlign: 'center',
     color: '#333',
   },
-
+  loginLink: {
+    fontSize: 16,
+    fontFamily: fonts.Bold,
+    color: colors.primary,
+  },
   backButton: {
     position: 'absolute',
     top: 40,
     left: 30,
     zIndex: 10,
   },
-
   backIconWrapper: {
     backgroundColor: colors.white,
     borderRadius: 999,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  
 });

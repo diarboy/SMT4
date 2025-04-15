@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, Redirect } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { ActivityIndicator, View } from 'react-native';
@@ -42,6 +42,12 @@ export default function RootLayout() {
       </View>
     );
   }
+
+  // //
+  // if (isLoggedIn) {
+  //   return <Redirect href="/(tabs)" />;
+  // }
+  // //
 
   return (
     <Stack

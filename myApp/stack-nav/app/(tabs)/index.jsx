@@ -24,19 +24,19 @@ const Home = () => {
       <Text style={styles.titlelogo}>allbibek</Text>
     </View>
       <Image source={require("../../assets/images/hero.png")} style={styles.hero}></Image>
-      <Text style={styles.title}>Welcome{'\n'}Back{'\n'}{name ? `${name}!` : 'This is MyApp'}</Text>
+      <Text style={styles.title}>Welcome{'\n'}Back {name ? `${name}!` : 'This is MyApp'}</Text>
       <Text style={styles.headbody}>Kelola semua kebutuhan finansial Anda dengan mudah melalui MyApp.</Text>
       <Text style={styles.body}> Mulai dari belanja online, isi ulang pulsa, bayar tagihan listrik dan air, hingga transfer dana ke sesama pengguna, semua bisa dilakukan langsung dari aplikasi.</Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
             style={[styles.loginButtonWrapper, { backgroundColor: colors.primary },]}
             onPress={() => router.push('/home/login')}>
-          <Text style={styles.loginButtonText}>Login</Text>
+          <Text style={styles.loginButtonText}>Get</Text>
         </TouchableOpacity>
         <TouchableOpacity 
             style={styles.loginButtonWrapper}
             onPress={() => router.push('/home/signup')}>
-          <Text style={styles.signupButtonText}>SignUp</Text>
+          <Text style={styles.signupButtonText}>Start</Text>
         </TouchableOpacity>
       </View>
   </View>

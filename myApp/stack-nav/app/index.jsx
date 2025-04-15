@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors } from '../assets/utils/colors';
 import { fonts } from '../assets/utils/fonts';
+import Animated, { FadeIn, FadeInDown} from 'react-native-reanimated';
 
 export default function Home() {
   const router = useRouter();
@@ -32,28 +33,45 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <View style={styles.logocontainer}>
-        <Image source={require("../assets/images/react-logo.png")} style={styles.logo} />
-        <Text style={styles.titlelogo}>allbibek</Text>
+        <Animated.Image source={require("../assets/images/react-logo.png")} style={styles.logo}
+        entering={FadeIn.duration(1000).delay(100)}
+        />
+        <Animated.Text style={styles.titlelogo}
+          entering={FadeIn.duration(1000)}
+        > allbibek</Animated.Text>
       </View>
-      <Image source={require("../assets/images/hero.png")} style={styles.hero} />
-      <Text style={styles.title}>Hello! {'\n'}Welcome {'\n'}to MyApp</Text>
-      <Text style={styles.headbody}>Kelola semua kebutuhan finansial Anda dengan mudah melalui MyApp.</Text>
-      <Text style={styles.body}>Mulai dari belanja online, isi ulang pulsa, bayar tagihan listrik dan air, hingga transfer dana ke sesama pengguna, semua bisa dilakukan langsung dari aplikasi.</Text>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity activeOpacity={0.7}
-          style={[styles.loginButtonWrapper, { backgroundColor: colors.primary }]}
-          onPress={() => router.push('/home/login')}>
-          <Text style={styles.loginButtonText}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.7}
-          style={styles.loginButtonWrapper}
-          onPress={() => router.push('/home/signup')}>
-          <Text style={styles.signupButtonText}>SignUp</Text>
-        </TouchableOpacity>
+      <Animated.Image source={require("../assets/images/hero.png")} style={styles.hero}
+      entering={FadeIn.duration(1000).delay(200)}/>
+      <View style={styles.bodycontent}>
+        <Animated.View
+          entering={FadeInDown.duration(1000).springify().damping(12)}
+          style={{ alignItems: 'center' }}
+        >
+          <Text style={styles.title}>Hello! {'\n'}Welcome {'\n'}to MyApp</Text>
+          <Text style={styles.headbody}>Kelola semua kebutuhan finansial Anda dengan mudah melalui MyApp.</Text>
+          <Text style={styles.body}>Mulai dari belanja online, isi ulang pulsa, bayar tagihan listrik dan air, hingga transfer dana ke sesama pengguna, semua bisa dilakukan langsung dari aplikasi.</Text>
+          </Animated.View>
+        <Animated.View style={styles.buttonContainer}
+        entering={FadeInDown.duration(1000).delay(200).springify().damping(12)}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={[styles.loginButtonWrapper, { backgroundColor: colors.primary }]}
+              onPress={() => router.push('/home/login')}
+            >
+              <Text style={styles.loginButtonText}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.loginButtonWrapper}
+              onPress={() => router.push('/home/signup')}
+            >
+              <Text style={styles.signupButtonText}>SignUp</Text>
+            </TouchableOpacity>
+          </Animated.View>
       </View>
     </View>
   );
-}
+}  
 
 const styles = StyleSheet.create({
   logocontainer: {
@@ -81,10 +99,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   hero: {
-    width: 250,
-    height: 250,
+    width: 300,
+    height: 300,
     resizeMode: 'contain',
-    marginBottom: -20,
+    marginBottom: -80,
   },
   title: {
     fontSize: 48,
@@ -95,6 +113,11 @@ const styles = StyleSheet.create({
     alignSelf: 'left',
     lineHeight: 48,
     paddingHorizontal: 20,
+  },
+  bodycontent: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   headbody: {
     fontSize: 20,

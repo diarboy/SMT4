@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, useRouter } from 'expo-router'
+import { Tabs, useRouter, Redirect } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TabBar from '../../components/TabBar'
 
@@ -17,11 +17,11 @@ const _layout = () => {
   }, []);
 
   if (!authChecked) {
-    return null; // atau loading spinner
+    return null;
   }
 
   if (!isAuthenticated) {
-    return <Redirect href="/" />;  // Redirect ke app/index.jsx
+    return <Redirect href="/" />;
   }
   
   return (

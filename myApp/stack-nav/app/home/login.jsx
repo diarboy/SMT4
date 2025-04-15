@@ -5,40 +5,46 @@ import { colors } from '../../assets/utils/colors';
 import { fonts } from '../../assets/utils/fonts';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../assets/lib/supabase';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     setLoading(true);
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
-        Alert.alert('Login Gagal', error.message);
-        setMessage(error.message);
-
+      Alert.alert('Login Gagal', error.message);
     } else {
       Alert.alert('Berhasil', 'Login berhasil');
-      await AsyncStorage.setItem('session', JSON.stringify(data.session))
+      await AsyncStorage.setItem('session', JSON.stringify(data.session));
       await AsyncStorage.setItem('name', data.user?.user_metadata?.name || '');
+      await AsyncStorage.setItem('email', data.user?.email || '');
       await AsyncStorage.setItem('token', data.session?.access_token || '');
-      router.replace('(tabs)')
-      }
-      setLoading(false);
+      router.replace('(tabs)');
+    }
+    setLoading(false);
   };
 
   useEffect(() => {
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
+      const { data, error } = await supabase.auth.getSession();
+
+      if (error) {
+        console.error('Error checking session:', error.message);
+        return;
+      }
+
+      if (data && data.session) {
         router.replace('(tabs)');
       }
     };
+
     checkSession();
   }, []);
 
@@ -51,18 +57,48 @@ export default function Login() {
       </TouchableOpacity>
 
       <Text style={styles.title}>Login ke MyApp</Text>
-      <TextInput placeholder="Email" style={styles.input} value={email} onChangeText={setEmail} autoCapitalize="none" />
-      <TextInput placeholder="Password" style={styles.input} value={password} onChangeText={setPassword} secureTextEntry />
+      <View style={styles.inputWrapper}>
+        <Ionicons name="mail-outline" size={20} color="#888" style={styles.inputIcon} />
+        <TextInput
+          placeholder="Email"
+          style={styles.input}
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
+      </View>
+
+      <View style={styles.inputWrapper}>
+        <Ionicons name="lock-closed-outline" size={20} color="#999" style={styles.inputIcon} />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!showPassword}
+          style={styles.input}
+        />
+        
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <Ionicons
+            name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+            size={22}
+            color="#999"
+            style={styles.eyeButton}
+          />
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
         <Text style={styles.buttonText}>{loading ? 'Loading...' : 'Masuk'}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.replace('/home/signup')}>
-        <Text style={styles.signupText}>
-          Belum punya akun? <Text style={{ color: colors.primary }}>Daftar</Text>
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.signupContainer}>
+        <Text style={styles.signupText}>Belum punya akun? </Text>
+        <TouchableOpacity onPress={() => router.replace('/home/signup')}>
+          <Text style={styles.signupLink}>Daftar</Text>
+         </TouchableOpacity>
+        </View>
     </View>
   );
 }
@@ -81,14 +117,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: colors.black,
   },
-  input: {
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#f0f0f0',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    fontSize: 16,
-    fontFamily: fonts.Regular,
     borderRadius: 12,
     marginBottom: 20,
+    paddingHorizontal: 15,
+    height: 60,
+  },
+  inputIcon: {
+    marginRight: 10,
+    marginLeft: 5,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: fonts.Regular,
+  },
+  eyeButton: {
+    paddingLeft: 10,
+    paddingRight: 5,
   },
   button: {
     backgroundColor: colors.primary,
@@ -101,21 +150,30 @@ const styles = StyleSheet.create({
     fontFamily: fonts.Bold,
     textAlign: 'center',
   },
-  signupText: {
+  signupContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 20,
+  },
+  signupText: {
     fontSize: 16,
     fontFamily: fonts.Regular,
     textAlign: 'center',
     color: '#333',
   },
-
+  signupLink: {
+    fontSize: 16,
+    fontFamily: fonts.Bold,
+    color: colors.primary,
+    marginLeft: 0,
+  },
   backButton: {
     position: 'absolute',
     top: 40,
     left: 30,
     zIndex: 10,
   },
-
   backIconWrapper: {
     backgroundColor: colors.white,
     borderRadius: 999,

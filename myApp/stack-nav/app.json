@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.allbibek.stacknav"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +37,18 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "4fb3ff7d-a75f-4f4f-bd0d-993ff44a5c00"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/4fb3ff7d-a75f-4f4f-bd0d-993ff44a5c00"
     }
   }
 }

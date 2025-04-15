@@ -21,7 +21,7 @@ export default function ProfileLayout() {
         name="index"
         options={{
           drawerLabel: 'Profil Saya',
-          title: 'ABOY',
+          title: 'My Profile',
           drawerIcon: ({ color, size }) => (
             <Ionicons name="person-circle-outline" size={size} color={color} />
           ),
@@ -31,7 +31,7 @@ export default function ProfileLayout() {
         name="settings"
         options={{
           drawerLabel: 'Pengaturan',
-          title: 'Settings',
+          title: 'Profile Settings',
           drawerItemStyle: { marginTop: 10 },
           drawerIcon: ({ color, size }) => (
             <Ionicons name="settings-outline" size={size} color={color} />
