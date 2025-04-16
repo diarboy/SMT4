@@ -113,7 +113,7 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: colors.primary+20,
     paddingTop: 20,
     paddingBottom: 30,
   },
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.primary+40,
     borderRadius: 12,
     padding: 20,
     marginHorizontal: 15,
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 10,
-    elevation: 5,
+    // elevation: 5,
   },
   cardTitle: {
     fontSize: 22,

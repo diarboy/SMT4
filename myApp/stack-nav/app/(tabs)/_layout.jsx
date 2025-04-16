@@ -45,7 +45,8 @@ const _layout = () => {
      <Tabs.Screen
       name='transactions'
       options={{
-        title: "Transactions"
+        title: "Transactions",
+        headerShown: false,
     }}
     />
     

@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import React, { useState } from 'react';
 import { colors } from '../../assets/utils/colors'
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const formatToRupiah = (amount) => {
   return 'Rp. ' + Math.abs(amount).toLocaleString('id-ID', {
@@ -64,19 +65,32 @@ export default function TransactionsScreen() {
       </View>
 
       <View style={styles.statsContainer}>
-        <View style={styles.statItem}>
-          <Text style={styles.statValue}>{formatToRupiah(totalIncome)}</Text>
-          <Text style={styles.statLabel}>Incomes</Text>
+        {/*Incomes & Expenses*/}
+        <View style={styles.statColumn}>
+          <View style={styles.statItemRow}>
+            <Ionicons name="arrow-up-circle" size={22} color="#10b981" style={styles.statIcon} />
+            <View>
+              <Text style={styles.statValue}>{formatToRupiah(totalIncome)}</Text>
+              <Text style={styles.statLabel}>Incomes</Text>
+            </View>
+          </View>
+          <View style={styles.statItemRow}>
+            <Ionicons name="arrow-down-circle" size={22} color="#ef4444" style={styles.statIcon} />
+            <View>
+              <Text style={styles.statValue}>{formatToRupiah(totalExpense)}</Text>
+              <Text style={styles.statLabel}>Expenses</Text>
+            </View>
+          </View>
         </View>
+
         <View style={styles.statDivider} />
-        <View style={styles.statItem}>
-          <Text style={styles.statValue}>{formatToRupiah(totalExpense)}</Text>
-          <Text style={styles.statLabel}>Expenses</Text>
-        </View>
-        <View style={styles.statDivider} />
-        <View style={styles.statItem}>
-          <Text style={styles.statValue}>{transactions.length}</Text>
-          <Text style={styles.statLabel}>Jumlah Transaksi</Text>
+
+        {/* Jumlah Transaksi */}
+        <View style={styles.statItemRight}>
+          <View style={styles.statCenterContent}>
+            <Text style={styles.statValue2}>{transactions.length}</Text>
+            <Text style={styles.statLabel}>Jumlah Transaksi</Text>
+          </View>
         </View>
       </View>
 
@@ -87,8 +101,18 @@ export default function TransactionsScreen() {
           entering={FadeInDown.delay(index * 100)}
           style={styles.transactionCard}>
           
-          <View style={styles.transactionHeader}>
-            <Text style={styles.transactionTitle}>{transaction.title}</Text>
+          {/* Icon + Title + Amount */}
+          <View style={styles.rowBetween}>
+            <View style={styles.rowLeft}>
+              <Ionicons
+                name={transaction.amount > 0 ? 'arrow-up-circle' : 'arrow-down-circle'}
+                size={22}
+                color={transaction.amount > 0 ? '#10b981' : '#ef4444'}
+                style={{ marginRight: 10 }}
+              />
+              <Text style={styles.transactionTitle}>{transaction.title}</Text>
+            </View>
+
             <Text
               style={[
                 styles.transactionAmount,
@@ -98,6 +122,7 @@ export default function TransactionsScreen() {
             </Text>
           </View>
 
+          {/* Footer Info */}
           <View style={styles.transactionFooter}>
             <Text style={styles.transactionDate}>{transaction.date}</Text>
             <View style={styles.categoryTag}>
@@ -152,38 +177,60 @@ const styles = StyleSheet.create({
     color: '#64748b',
     marginTop: 4,
   },
-  statsContainer: {
-    flexDirection: 'row',
-    backgroundColor: '#ffffff',
-    marginHorizontal: 16,
-    marginTop: 16,
-    padding: 20,
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  statItem: {
+statsContainer: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  backgroundColor: '#ffffff',
+  marginHorizontal: 16,
+  marginTop: 16,
+  padding: 20,
+  borderRadius: 16,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.05,
+  shadowRadius: 4,
+  elevation: 2,
+},
+  statColumn: {
     flex: 1,
-    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  statDivider: {
-    width: 1,
-    backgroundColor: '#e2e8f0',
-    marginHorizontal: 16,
+  statItemRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  statItemRight: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  statCenterContent: {
+    alignItems: 'center',  
+    justifyContent: 'center',
+  },
+  statIcon: {
+    marginRight: 10,
   },
   statValue: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#1e293b',
-    marginBottom: 4,
+  },
+  statValue2: {
+    fontSize: 52,
+    fontWeight: 'bold',
+    color: '#1e293b',
   },
   statLabel: {
     fontSize: 14,
     color: '#64748b',
   },
+  statDivider: {
+    width: 1,
+    backgroundColor: '#e2e8f0',
+    marginHorizontal: 30,
+  },
+
   transactionCard: {
     backgroundColor: colors.white,
     marginHorizontal: 16,
@@ -236,4 +283,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: 10,
   },  
+  rowBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  rowLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  
 });

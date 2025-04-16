@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import { colors } from '../../assets/utils/colors';
+import { Ionicons } from '@expo/vector-icons';
 import { fonts } from '../../assets/utils/fonts';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
 
 const Home = () => {
   const [name, setName] = useState('');
@@ -18,40 +20,104 @@ const Home = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-    <View style={styles.logocontainer}>
-      <Image source={require("../../assets/images/react-logo.png")} style={styles.logo}></Image>
-      <Text style={styles.titlelogo}>allbibek</Text>
-    </View>
-      <Image source={require("../../assets/images/hero.png")} style={styles.hero}></Image>
-      <Text style={styles.title}>Welcome{'\n'}Back {name ? `${name}!` : 'This is MyApp'}</Text>
-      <Text style={styles.headbody}>Kelola semua kebutuhan finansial Anda dengan mudah melalui MyApp.</Text>
-      <Text style={styles.body}> Mulai dari belanja online, isi ulang pulsa, bayar tagihan listrik dan air, hingga transfer dana ke sesama pengguna, semua bisa dilakukan langsung dari aplikasi.</Text>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-            style={[styles.loginButtonWrapper, { backgroundColor: colors.primary },]}
-            onPress={() => router.push('/home/login')}>
-          <Text style={styles.loginButtonText}>Get</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-            style={styles.loginButtonWrapper}
-            onPress={() => router.push('/home/signup')}>
-          <Text style={styles.signupButtonText}>Start</Text>
-        </TouchableOpacity>
+    <ScrollView style={styles.scrollcontainer} showsVerticalScrollIndicator={false}>
+      <View style={styles.container}>
+        <View style={styles.logocontainer}>
+          <Image source={require("../../assets/images/react-logo.png")} style={styles.logo} />
+          <Text style={styles.titlelogo}>allbibek</Text>
+        </View>
+        
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', flex: 1 }}>
+          <TouchableOpacity onPress={() => router.push('/profile/account')} style={styles.iconButton}>
+            <Ionicons name="person-outline" size={24} color="#007aff" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/(tabs)/profile/')} style={styles.iconButton}>
+            <Ionicons name="lock-closed-outline" size={24} color="#007aff" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/profile/notifications')} style={styles.iconButton}>
+            <Ionicons name="notifications-outline" size={24} color="#007aff" />
+          </TouchableOpacity>
+        </View>
+        
+        <Text style={styles.title}>Welcome{'\n'}Back {name ? `${name}!` : 'Hello, Dude!'}</Text>
       </View>
-  </View>
-);
+
+      <Animated.View 
+        entering={FadeInDown.delay(200)}
+        style={styles.balanceContainer}>
+        <Text style={styles.balanceLabel}>Total Balance</Text>
+        <Text style={styles.balanceAmount}>Rp. 12.345,67</Text>
+        <View style={styles.statsContainer}>
+          <View style={styles.statItem}>
+            <Text style={styles.statLabel}>Income</Text>
+            <Text style={styles.statAmount}>+Rp. 2.450,00</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statLabel}>Expenses</Text>
+            <Text style={styles.statAmount}>-Rp. 1.280,00</Text>
+          </View>
+        </View>
+      </Animated.View>
+
+      <Animated.View 
+        entering={FadeInRight.delay(400)}
+        style={styles.quickActionsContainer}>
+        <Text style={styles.sectionTitle}>Quick Actions</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <TouchableOpacity intensity={20} style={styles.actionCard}>
+            <Text style={styles.actionTitle}>Send Money</Text>
+          </TouchableOpacity>
+          <TouchableOpacity intensity={20} style={styles.actionCard}>
+            <Text style={styles.actionTitle}>Request</Text>
+          </TouchableOpacity>
+          <TouchableOpacity intensity={20} style={styles.actionCard}>
+            <Text style={styles.actionTitle}>Top Up</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </Animated.View>
+
+      <Animated.View 
+        entering={FadeInDown.delay(600)}
+        style={styles.recentTransactionsContainer}>
+        <Text style={styles.sectionTitle}>Recent Transactions</Text>
+        {[1, 2, 3].map((item) => (
+          <View key={item} style={styles.transactionItem}>
+            <View>
+              <Text style={styles.transactionTitle}>Netflix Subscription</Text>
+              <Text style={styles.transactionDate}>Mar 15, 2024</Text>
+            </View>
+            <Text style={styles.transactionAmount}>-Rp. 15.000</Text>
+          </View>
+        ))}
+      </Animated.View>
+      <View style={styles.container}>
+        <View style={styles.buttonContainer}>
+            <TouchableOpacity
+                style={[styles.loginButtonWrapper, { backgroundColor: colors.primary },]}
+                onPress={() => router.push('/home/login')}>
+              <Text style={styles.loginButtonText}>Get</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+                style={styles.loginButtonWrapper}
+                onPress={() => router.push('/home/signup')}>
+              <Text style={styles.signupButtonText}>Start</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        
+    </ScrollView>
+  );
 };
 
 const styles = StyleSheet.create({
   logocontainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'flex-start',
-    marginBottom: 20,
-    paddingHorizontal: 5,
+    justifyContent: 'flex-start',
+    marginBottom: 10,
+    paddingHorizontal: 15,
   },
-
+  
   logo: {
     width: 40,
     height: 40,
@@ -62,56 +128,48 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: fonts.Comfort2,
     letterSpacing: 2,
-    marginBottom: 0
   },
-
+  
+  iconButton: {
+    marginHorizontal: 5,
+  },
+  
+  container: {
+    paddingHorizontal: 15,
+    marginBottom: 20,
+  },
+  
   container: {
     flex: 1,
     backgroundColor: colors.white,
     alignItems: 'center',
-    padding: 20,
+    padding: 10,
   },
-  
-  hero: {
-    width: 250,
-    height: 250,
-    marginBottom: -20
-  },
-
+  scrollcontainer: {
+    flex: 1,
+    backgroundColor: colors.white,
+  },  
   title: {
-    fontSize: 48,
-    fontFamily: fonts.Bold,
+    fontSize: 26,
+    fontFamily: fonts.Manrope,
     color: colors.black,
     letterSpacing: 1,
-    marginBottom: 20,
+    marginTop: 20,
     alignSelf: 'left',
-    lineHeight: 48,
-    paddingHorizontal: 20,
+    // lineHeight: 24,
+    paddingHorizontal: 10,
   },
 
-  headbody: {
-    fontSize: 20,
-    fontFamily: fonts.Heading2,
-    textAlign: 'center',
-    marginBottom: 20,
-    paddingHorizontal: 20,
-  },
-
-  body: {
-    fontSize: 16,
-    fontFamily: fonts.Light,
-    textAlign: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
   buttonContainer: {
     marginTop: 20,
+    marginBottom: 150,
     flexDirection: 'row',
     borderWidth: 2,
     borderColor: colors.primary,
     width: "80%",
     height: 60,
-    borderRadius: 100
+    borderRadius: 100,
+
   },
   loginButtonWrapper: {
     justifyContent: 'center',
@@ -119,18 +177,122 @@ const styles = StyleSheet.create({
     width: "50%",
     borderRadius: 98,
   },
-
   loginButtonText: {
     color: colors.white,
     fontSize: 18,
     fontFamily: fonts.Bold,
   },
-
   signupButtonText: {
     fontSize: 18,
     fontFamily: fonts.Bold,
     color: colors.primary,
-  }
+  },
+  
+  balanceContainer: {
+    backgroundColor: '#6366f1',
+    borderRadius: 20,
+    margin: 16,
+    padding: 20,
+    shadowColor: '#6366f1',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  balanceLabel: {
+    color: '#e0e7ff',
+    fontSize: 16,
+  },
+  balanceAmount: {
+    color: '#ffffff',
+    fontSize: 36,
+    fontWeight: 'bold',
+    marginTop: 8,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  statItem: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 12,
+    padding: 12,
+    flex: 1,
+    marginHorizontal: 4,
+  },
+  statLabel: {
+    color: '#e0e7ff',
+    fontSize: 14,
+  },
+  statAmount: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
+    marginTop: 4,
+  },
+  quickActionsContainer: {
+    marginTop: 24,
+    paddingHorizontal: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1e293b',
+    marginBottom: 16,
+  },
+  actionCard: {
+    // backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: colors.primary+50,
+    borderRadius: 16,
+    padding: 20,
+    marginRight: 12,
+    width: 120,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  actionTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#1e293b',
+  },
+  recentTransactionsContainer: {
+    marginTop: 24,
+    paddingHorizontal: 16,
+    paddingBottom: 24,
+  },
+  transactionItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: colors.gray,
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    // elevation: 2,
+  },
+  transactionTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#1e293b',
+  },
+  transactionDate: {
+    fontSize: 14,
+    color: '#64748b',
+    marginTop: 4,
+  },
+  transactionAmount: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#ef4444',
+  },
 });
 
 export default Home

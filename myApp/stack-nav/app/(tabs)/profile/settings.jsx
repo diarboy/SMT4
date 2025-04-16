@@ -90,7 +90,7 @@ export default function SettingScreen() {
 
       <View style={styles.statsContainer}>
         <View style={styles.statItem}>
-          <Text style={styles.statValue}>$12,450</Text>
+          <Text style={styles.statValue}>Rp. 12,450</Text>
           <Text style={styles.statLabel}>Total Balance</Text>
         </View>
         <View style={styles.statDivider} />
