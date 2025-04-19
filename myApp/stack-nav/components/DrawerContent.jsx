@@ -5,22 +5,37 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../assets/lib/supabase';
+import { useAuth } from '../context/AuthContext';
 
 const CustomDrawerContent = (props) => {
   const router = useRouter();
+  const { session } = useAuth();
+  const userName = session?.user?.user_metadata?.name || 'Dude';
+
+  const { logout } = useAuth(); 
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('token');
-    await AsyncStorage.removeItem('session');
-  
-    const { error } = await supabase.auth.signOut(); 
-  
-    if (error) {
-      console.error('Error logging out from Supabase:', error.message);
-    } else {
-      router.replace('/home/login');
+    try {
+      await logout();
+      router.replace('/home/login'); 
+    } catch (error) {
+      console.error('Error logging out:', error);
     }
   };
+
+  /*---- AsyncStorage ---*/
+  // const handleLogout = async () => {
+  //   await AsyncStorage.removeItem('token');
+  //   await AsyncStorage.removeItem('session');
+  
+  //   const { error } = await supabase.auth.signOut(); 
+  
+  //   if (error) {
+  //     console.error('Error logging out from Supabase:', error.message);
+  //   } else {
+  //     router.replace('/home/login');
+  //   }
+  // };
 
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
@@ -29,7 +44,7 @@ const CustomDrawerContent = (props) => {
           source={{ uri: 'https://i.pravatar.cc/100' }}
           style={styles.avatar}
         />
-        <Text style={styles.name}>Ardi Syah</Text>
+        <Text style={styles.name}>{userName}</Text>
       </View>
 
       {/* List item */}
@@ -37,28 +52,28 @@ const CustomDrawerContent = (props) => {
         <DrawerItemList {...props} />
       </View>
 
-              {/* Navigasi Tab */}
-              <DrawerItem
-          label="Home"
-          onPress={() => router.push('/')}
-          icon={({ color, size }) => (
-            <Ionicons name="home-outline" size={size} color={color} />
-          )}
-        />
-        <DrawerItem
-          label="Explore"
-          onPress={() => router.push('/explore')}
-          icon={({ color, size }) => (
-            <Ionicons name="compass-outline" size={size} color={color} />
-          )}
-        />
-        <DrawerItem
-          label="Transactions"
-          onPress={() => router.push('/transactions')}
-          icon={({ color, size }) => (
-            <Ionicons name="card-outline" size={size} color={color} />
-          )}
-        />
+      {/* Navigasi Tab */}
+      <DrawerItem
+        label="Home"
+        onPress={() => router.push('/')}
+        icon={({ color, size }) => (
+          <Ionicons name="home-outline" size={size} color={color} />
+        )}
+      />
+      <DrawerItem
+        label="Explore"
+        onPress={() => router.push('/explore')}
+        icon={({ color, size }) => (
+          <Ionicons name="compass-outline" size={size} color={color} />
+        )}
+      />
+      <DrawerItem
+        label="Transactions"
+        onPress={() => router.push('/transactions')}
+        icon={({ color, size }) => (
+          <Ionicons name="card-outline" size={size} color={color} />
+        )}
+      />
 
       {/* Logout */}
       <DrawerItem

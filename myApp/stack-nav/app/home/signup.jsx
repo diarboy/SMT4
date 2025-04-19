@@ -6,6 +6,7 @@ import { fonts } from '../../assets/utils/fonts';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../assets/lib/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Background from '@/assets/utils/background';
 
 export default function Signup() {
   const router = useRouter();
@@ -47,10 +48,11 @@ export default function Signup() {
   };
 
   return (
+    <Background>
     <View style={styles.container}>
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
         <View style={styles.backIconWrapper}>
-          <Ionicons name="arrow-back" size={40} color={colors.primary} />
+          <Ionicons name="chevron-back-outline" size={36} color={colors.primary} />
         </View>
       </TouchableOpacity>
 
@@ -105,7 +107,8 @@ export default function Signup() {
           </Text>
       </TouchableOpacity>
       </View>
-    </View>
+      </View>
+    </Background>
   );
 }
 
@@ -114,7 +117,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 30,
     justifyContent: 'center',
-    backgroundColor: colors.white,
+    backgroundColor: 'transparent',
   },
   title: {
     fontSize: 32,
@@ -188,8 +191,11 @@ const styles = StyleSheet.create({
   },
   backIconWrapper: {
     backgroundColor: colors.white,
-    borderRadius: 999,
+    borderRadius: 20,
+    paddingHorizontal: 5,
+    paddingVertical: 4,
     alignItems: 'center',
     justifyContent: 'center',
-  },
+    opacity: 0.7,
+  },  
 });

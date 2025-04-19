@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import TextHeading from '../../../components/TextHeading';
 
 export default function Settings() {

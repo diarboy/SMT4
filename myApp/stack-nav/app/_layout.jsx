@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Stack, Redirect } from 'expo-router';
+import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { ActivityIndicator, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors } from '../assets/utils/colors';
+import { AuthProvider } from '../context/AuthContext';
+import LottieSplash from './home/splash';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLottie, setShowLottie] = useState(true);
+
   const [fontsLoaded] = useFonts({
     'Inter-Black': require('../assets/fonts/Inter-Black.ttf'),
     'Inter-SemiBold': require('../assets/fonts/Inter-SemiBold.ttf'),
@@ -27,7 +31,11 @@ export default function RootLayout() {
     const checkLogin = async () => {
       const token = await AsyncStorage.getItem('token');
       setIsLoggedIn(!!token);
-      setIsReady(true);
+      setTimeout(() => {
+        setShowLottie(false);
+        setIsReady(true);
+        SplashScreen.hideAsync();
+      }, 3000);
     };
 
     if (fontsLoaded) {
@@ -36,23 +44,22 @@ export default function RootLayout() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded || !isReady) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color={colors.black} />
-      </View>
-    );
+    if (showLottie) {
+      return <LottieSplash onFinish={() => {
+        setShowLottie(false);
+        setIsReady(true);
+        SplashScreen.hideAsync();
+      }} />;
+    }
+    return null;
   }
-
-  // //
-  // if (isLoggedIn) {
-  //   return <Redirect href="/(tabs)" />;
-  // }
-  // //
-
+  
   return (
-    <Stack
-      screenOptions={{ headerShown: false }}
-      initialRouteName={isLoggedIn ? '(tabs)' : 'index'}
-    />
+      <AuthProvider>
+        <Stack
+          screenOptions={{ headerShown: false }}
+          initialRouteName={isLoggedIn ? '(tabs)' : 'index'}
+          />
+      </AuthProvider>
   );
 }

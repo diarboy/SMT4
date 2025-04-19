@@ -4,7 +4,7 @@ import TabBarButton from './TabBarButton'
 
 
 const TabBar = ({ state, descriptors, navigation }) => {
-    const primaryColor = '#0891b2';
+  const primaryColor = '#0891b2';
   const altColor = '#737373';
 
 const currentRoute = state.routes[state.index].name;
@@ -56,32 +56,6 @@ const currentRoute = state.routes[state.index].name;
             label={label}
             />
         )
-        
-        // return (
-
-        //     <TouchableOpacity
-        //     key={route.name}
-        //     style={styles.tabbarItem}
-        //     accessibilityRole="button"
-        //     accessibilityState={isFocused ? { selected: true } : {}}
-        //     accessibilityLabel={options.tabBarAccessibilityLabel}
-        //     testID={options.tabBarTestID}
-        //     onPress={onPress}
-        //     onLongPress={onLongPress}
-        //     >
-        //     {
-        //         icons[route.name]({
-        //             color: isFocused ? primaryColor : altColor
-        //         })
-        //     }
-        //     <Text style={{ 
-        //         color: isFocused ? primaryColor : altColor, 
-        //         fontSize: 11
-        //         }}>
-        //       {label}
-        //     </Text>
-        //   </TouchableOpacity>
-        // );
       })}
     </View>
   )
@@ -90,13 +64,13 @@ const currentRoute = state.routes[state.index].name;
 const styles = StyleSheet.create({
     tabbar: {
         position: 'absolute',
-        bottom: 25,
+        bottom: 10,
         width: '90%',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         alignSelf: 'center',
-        backgroundColor: 'white',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
         marginHorizontal: 20,
         paddingVertical: 15,
         borderRadius: 25,

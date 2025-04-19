@@ -1,197 +1,304 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Animated, Linking } from 'react-native';
-import { useRouter, useNavigation } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { supabase } from '../../../assets/lib/supabase';
+import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import { Settings, CreditCard, Bell, Shield, HelpCircle, LogOut } from 'lucide-react-native';
+import { BlurView } from 'expo-blur';
+import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { colors } from '../../../assets/utils/colors';
+import React, { useEffect, useState } from 'react'
+import { supabase } from '../../../assets/lib/supabase';
+import { Ionicons } from '@expo/vector-icons';
 
-const ProfileScreen = () => {
+export default function SettingScreen() {
+
+  const menuItems = [
+    {
+      id: 1,
+      icon: <Settings size={24} color="#475569" />,
+      title: 'Account Settings',
+      subtitle: 'Manage your account preferences',
+    },
+    {
+      id: 2,
+      icon: <CreditCard size={24} color="#475569" />,
+      title: 'Payment Methods',
+      subtitle: 'Manage your payment options',
+    },
+    {
+      id: 3,
+      icon: <Bell size={24} color="#475569" />,
+      title: 'Notifications',
+      subtitle: 'Customize your alerts',
+    },
+    {
+      id: 4,
+      icon: <Shield size={24} color="#475569" />,
+      title: 'Security',
+      subtitle: 'Protect your account',
+    },
+    {
+      id: 5,
+      icon: <HelpCircle size={24} color="#475569" />,
+      title: 'Help & Support',
+      subtitle: 'Get assistance',
+    },
+  ];
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const router = useRouter();
-  const navigation = useNavigation();
 
-  const [fadeAnim] = useState(new Animated.Value(0));
-  const openSocialMedia = (url) => {
-    Linking.openURL(url).catch((err) => console.error("Error opening URL:", err));
-  };
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem('token');
-      await AsyncStorage.removeItem('session');
-      await supabase.auth.signOut();
-      router.replace('/home/login');
-    } catch (error) {
-      console.error("Error during logout:", error.message);
-    }
-  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const storedName = await AsyncStorage.getItem('name');
+      const storedEmail = await AsyncStorage.getItem('email');
 
-  React.useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
+      if (storedName) setName(storedName);
+      if (storedEmail) setEmail(storedEmail);
+    };
+    fetchUserData();
   }, []);
 
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('token');
+    await AsyncStorage.removeItem('session');
+  
+    const { error } = await supabase.auth.signOut(); 
+  
+    if (error) {
+      console.error('Error logging out from Supabase:', error.message);
+    } else {
+      router.replace('/home/login');
+    }
+  };
+  
   return (
-    <ScrollView style={styles.container}>
-      <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
-        <Image
-          source={{ uri: 'https://i.pravatar.cc/100' }}
-          style={styles.avatar}
-        />
-        <Text style={styles.name}>Ardi Syah</Text>
-        <Text style={styles.email}>ardisyah@example.com</Text>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <View style={styles.header}>
+      {/* Bar Navigasi Atas */}
+      <Animated.View entering={FadeInDown.delay(0)} style={styles.headerContainer}>
+        <View style={styles.leftSection}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
+            <Ionicons name="chevron-back-outline" size={24} color="#007aff" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.rightSection}>
+          <TouchableOpacity onPress={() => router.push('/profile/finance')} style={styles.iconButton}>
+            <Ionicons name="person-outline" size={24} color="#007aff" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/profile/privacy')} style={styles.iconButton}>
+            <Ionicons name="lock-closed-outline" size={24} color="#007aff" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/profile/notifications')} style={styles.iconButton}>
+            <Ionicons name="notifications-outline" size={24} color="#007aff" />
+          </TouchableOpacity>
+        </View>
       </Animated.View>
 
-      {/* Tentang Saya */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Tentang Saya</Text>
-        <Text style={styles.cardText}>
-          Desainer grafis dan developer full-stack dengan pengalaman lebih dari 5 tahun di industri teknologi dan desain.
-          Senang belajar hal baru dan berbagi pengetahuan kepada sesama.
-        </Text>
-      </View>
+      {/* Info Profil */}
+      <BlurView intensity={20} style={styles.profileContainer}>
+        <Image
+          source={{ uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=200' }}
+          style={styles.avatar}
+        />
+        <View style={styles.profileInfo}>
+          <Text style={styles.name}>{name ? `${name}` : 'John Doe'}</Text>
+          <Text style={styles.email}>{email ? email : 'john.doe@example.com'}</Text>
+          <View style={styles.verifiedBadge}>
+            <Text style={styles.verifiedText}>Verified Account</Text>
+          </View>
+        </View>
+      </BlurView>
+    </View>
 
-      {/* Keterampilan */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Keterampilan</Text>
-        <Text style={styles.cardText}>
-          - Desain Grafis: Photoshop, Illustrator
-          {'\n'}- Pengembangan Web: React, Node.js, Express
-          {'\n'}- Pengembangan Aplikasi: React Native, Expo
-        </Text>
-      </View>
-
-      {/* Pengalaman */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Pengalaman</Text>
-        <Text style={styles.cardText}>
-          - Full Stack Developer di TechLabs (2020 - Sekarang)
-          {'\n'}- Desainer Grafis di Creative Studio (2018 - 2020)
-        </Text>
-      </View>
-
-      {/* Media Sosial */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Media Sosial</Text>
-        <View style={styles.socialContainer}>
-          <TouchableOpacity onPress={() => openSocialMedia('https://facebook.com')}>
-            <Ionicons name="logo-facebook" size={30} color="#3b5998" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => openSocialMedia('https://twitter.com')}>
-            <Ionicons name="logo-twitter" size={30} color="#1DA1F2" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => openSocialMedia('https://linkedin.com')}>
-            <Ionicons name="logo-linkedin" size={30} color="#0077B5" />
-          </TouchableOpacity>
+      <View style={styles.statsContainer}>
+        <View style={styles.statItem}>
+          <Text style={styles.statValue}>Rp. 12,450</Text>
+          <Text style={styles.statLabel}>Total Balance</Text>
+        </View>
+        <View style={styles.statDivider} />
+        <View style={styles.statItem}>
+          <Text style={styles.statValue}>24</Text>
+          <Text style={styles.statLabel}>Transactions</Text>
         </View>
       </View>
 
-      {/* Tombol */}
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('settings')}
-        >
-          <Ionicons name="settings-outline" size={24} color="#fff" />
-          <Text style={styles.buttonText}>Pengaturan</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.button, styles.logoutButton]}
-          onPress={handleLogout}
-        >
-          <Ionicons name="log-out-outline" size={24} color="#fff" />
-          <Text style={styles.buttonText}>Keluar</Text>
-        </TouchableOpacity>
+      <View style={styles.menuContainer}>
+        {menuItems.map((item, index) => (
+          <Animated.View
+            key={item.id}
+            entering={FadeInDown.delay(index * 100)}
+          >
+            <TouchableOpacity style={styles.menuItem}>
+              <View style={styles.menuIcon}>{item.icon}</View>
+              <View style={styles.menuText}>
+                <Text style={styles.menuTitle}>{item.title}</Text>
+                <Text style={styles.menuSubtitle}>{item.subtitle}</Text>
+              </View>
+            </TouchableOpacity>
+          </Animated.View>
+        ))}
       </View>
+
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <LogOut size={24} color="#ef4444" />
+        <Text style={styles.logoutText}>Log Out</Text> 
+      </TouchableOpacity>
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.primary+20,
-    paddingTop: 20,
-    paddingBottom: 30,
+    backgroundColor: '#f8fafc',
   },
   header: {
-    alignItems: 'center',
-    marginBottom: 10,
+    padding: 20,
+    backgroundColor: '#ffffff',
   },
-  
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  leftSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rightSection: {
+    flexDirection: 'row',
+  },
+  iconButton: {
+    marginHorizontal: 5,
+  },
+  profileContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
   avatar: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    borderWidth: 4,
-    borderColor: '#007aff',
-    marginBottom: 15,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginRight: 16,
+  },
+  profileInfo: {
+    flex: 1,
   },
   name: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#333',
-    marginBottom: 5,
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1e293b',
+    marginBottom: 4,
   },
   email: {
     fontSize: 16,
-    color: '#666',
-    marginBottom: 25,
+    color: '#64748b',
+    marginBottom: 8,
   },
-  card: {
-    backgroundColor: colors.primary+40,
+  verifiedBadge: {
+    backgroundColor: '#10b981',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
     borderRadius: 12,
+    alignSelf: 'flex-start',
+  },
+  verifiedText: {
+    color: '#ffffff',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#ffffff',
+    marginHorizontal: 16,
+    marginTop: 16,
     padding: 20,
-    marginHorizontal: 15,
-    marginBottom: 25,
+    borderRadius: 16,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    // elevation: 5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  cardTitle: {
-    fontSize: 22,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 10,
-  },
-  cardText: {
-    fontSize: 16,
-    color: '#666',
-    lineHeight: 24,
-  },
-  socialContainer: {
-    flexDirection: 'row',
-    justifyContent: 'left',
+  statItem: {
+    flex: 1,
     alignItems: 'center',
-    gap: 8,
-    marginTop: 10,
   },
-  buttonsContainer: {
-    marginHorizontal: 20,
-    marginBottom: 30,
+  statDivider: {
+    width: 1,
+    backgroundColor: '#e2e8f0',
+    marginHorizontal: 16,
   },
-  button: {
-    backgroundColor: colors.primary,
-    borderRadius: 10,
+  statValue: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1e293b',
+    marginBottom: 4,
+  },
+  statLabel: {
+    fontSize: 14,
+    color: '#64748b',
+  },
+  menuContainer: {
+    padding: 16,
+  },
+  menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#ffffff',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.05,
+    // shadowRadius: 4,
+    // elevation: 2,
+  },
+  menuIcon: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#f1f5f9',
+    borderRadius: 20,
     justifyContent: 'center',
-    paddingVertical: 14,
-    marginBottom: 15,
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  menuText: {
+    flex: 1,
+  },
+  menuTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#1e293b',
+    marginBottom: 4,
+  },
+  menuSubtitle: {
+    fontSize: 14,
+    color: '#64748b',
   },
   logoutButton: {
-    backgroundColor: '#e74c3c',
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: '80%',
+    justifyContent: 'center',
+    backgroundColor: '#fef2f2',
+    marginHorizontal: 16,
+    padding: 16,
+    borderRadius: 12,
+    gap: 8,
   },
-  buttonText: {
-    marginLeft: 10,
+  logoutText: {
     fontSize: 16,
-    color: '#fff',
     fontWeight: '600',
+    color: '#ef4444',
   },
 });
-
-export default ProfileScreen;

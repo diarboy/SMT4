@@ -6,9 +6,12 @@ import { fonts } from '../../assets/utils/fonts';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../assets/lib/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../../context/AuthContext';
+import Background from '@/assets/utils/background';
 
 export default function Login() {
   const router = useRouter();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -22,10 +25,12 @@ export default function Login() {
       Alert.alert('Login Gagal', error.message);
     } else {
       Alert.alert('Berhasil', 'Login berhasil');
+      
       await AsyncStorage.setItem('session', JSON.stringify(data.session));
       await AsyncStorage.setItem('name', data.user?.user_metadata?.name || '');
       await AsyncStorage.setItem('email', data.user?.email || '');
       await AsyncStorage.setItem('token', data.session?.access_token || '');
+      await login(data.session);
       router.replace('(tabs)');
     }
     setLoading(false);
@@ -49,10 +54,11 @@ export default function Login() {
   }, []);
 
   return (
+  <Background>
     <View style={styles.container}>
       <TouchableOpacity onPress={() => router.replace('/')} style={styles.backButton}>
         <View style={styles.backIconWrapper}>
-          <Ionicons name="arrow-back" size={40} color={colors.primary} />
+          <Ionicons name="chevron-back-outline" size={36} color={colors.primary} />
         </View>
       </TouchableOpacity>
 
@@ -99,7 +105,8 @@ export default function Login() {
           <Text style={styles.signupLink}>Daftar</Text>
          </TouchableOpacity>
         </View>
-    </View>
+      </View>
+      </Background>
   );
 }
 
@@ -108,7 +115,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 30,
     justifyContent: 'center',
-    backgroundColor: colors.white,
+    backgroundColor: 'transparent',
   },
   title: {
     fontSize: 32,
@@ -176,8 +183,11 @@ const styles = StyleSheet.create({
   },
   backIconWrapper: {
     backgroundColor: colors.white,
-    borderRadius: 999,
+    borderRadius: 20,
+    paddingHorizontal: 5,
+    paddingVertical: 4,
     alignItems: 'center',
     justifyContent: 'center',
-  },
+    opacity: 0.7,
+  },  
 });

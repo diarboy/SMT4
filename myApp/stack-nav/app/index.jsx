@@ -4,7 +4,8 @@ import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors } from '../assets/utils/colors';
 import { fonts } from '../assets/utils/fonts';
-import Animated, { FadeIn, FadeInDown} from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
+import Background from '../assets/utils/background';
 
 export default function Home() {
   const router = useRouter();
@@ -31,6 +32,7 @@ export default function Home() {
   }
 
   return (
+  <Background>
     <View style={styles.container}>
       <View style={styles.logocontainer}>
         <Animated.Image source={require("../assets/images/react-logo.png")} style={styles.logo}
@@ -69,7 +71,8 @@ export default function Home() {
             </TouchableOpacity>
           </Animated.View>
       </View>
-    </View>
+      </View>
+    </Background>
   );
 }  
 
@@ -94,7 +97,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: 'transparent',
     alignItems: 'center',
     padding: 20,
   },
