@@ -8,6 +8,10 @@ import { supabase } from '../../assets/lib/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../../context/AuthContext';
 import Background from '@/assets/utils/background';
+import { StatusBar } from 'expo-status-bar';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { ArrowLeft } from 'lucide-react-native';
+import { COLORS } from '../../constants/theme';
 
 export default function Login() {
   const router = useRouter();
@@ -54,11 +58,13 @@ export default function Login() {
   }, []);
 
   return (
-  <Background>
+    <Background>
+    <SafeAreaView style={{ flex: 1 }}>
+    <StatusBar style="auto" translucent backgroundColor="transparent" />      
     <View style={styles.container}>
       <TouchableOpacity onPress={() => router.replace('/')} style={styles.backButton}>
-        <View style={styles.backIconWrapper}>
-          <Ionicons name="chevron-back-outline" size={36} color={colors.primary} />
+        <View>
+          <ArrowLeft size={24} color={COLORS.white} />
         </View>
       </TouchableOpacity>
 
@@ -105,7 +111,8 @@ export default function Login() {
           <Text style={styles.signupLink}>Daftar</Text>
          </TouchableOpacity>
         </View>
-      </View>
+        </View>
+        </SafeAreaView>
       </Background>
   );
 }
@@ -116,6 +123,18 @@ const styles = StyleSheet.create({
     padding: 30,
     justifyContent: 'center',
     backgroundColor: 'transparent',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 40,
+    left: 30,
+    zIndex: 10,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
   title: {
     fontSize: 32,
@@ -175,19 +194,4 @@ const styles = StyleSheet.create({
     color: colors.primary,
     marginLeft: 0,
   },
-  backButton: {
-    position: 'absolute',
-    top: 40,
-    left: 30,
-    zIndex: 10,
-  },
-  backIconWrapper: {
-    backgroundColor: colors.white,
-    borderRadius: 20,
-    paddingHorizontal: 5,
-    paddingVertical: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    opacity: 0.7,
-  },  
 });

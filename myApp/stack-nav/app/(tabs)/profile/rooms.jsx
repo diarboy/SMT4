@@ -133,7 +133,7 @@ export default function RoomsScreen() {
           <ArrowLeft size={24} color={COLORS.white} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Rooms</Text>
-        <TouchableOpacity style={styles.menuButton}>
+        <TouchableOpacity style={styles.menuButton}
           onPress={() => navigation.openDrawer()}>
           <Menu size={24} color={COLORS.white} />
         </TouchableOpacity>
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 0 : SPACING.s,
+    top: Platform.OS === 'ios' ? 0 : SPACING.xxl,
     left: 0,
     right: 0,
     zIndex: 10,
@@ -276,6 +276,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     paddingTop: Platform.OS === 'ios' ? SPACING.m : SPACING.l,
+
   },
   searchContainer: {
     paddingHorizontal: SPACING.m,

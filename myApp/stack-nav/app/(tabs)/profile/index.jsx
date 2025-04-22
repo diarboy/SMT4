@@ -7,6 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../../../assets/lib/supabase';
 import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 
 export default function SettingScreen() {
 
@@ -72,6 +74,8 @@ export default function SettingScreen() {
   };
   
   return (
+    <SafeAreaView style={{ flex: 1 }}>
+    <StatusBar style="auto" translucent backgroundColor="transparent" />
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
     <View style={styles.header}>
       {/* Bar Navigasi Atas */}
@@ -144,6 +148,7 @@ export default function SettingScreen() {
         <Text style={styles.logoutText}>Log Out</Text> 
       </TouchableOpacity>
     </ScrollView>
+    </SafeAreaView>
   );
 }
 

@@ -1,32 +1,46 @@
-import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated, View, StyleSheet } from 'react-native';
 import LottieView from 'lottie-react-native';
 
-const { width, height } = Dimensions.get('window');
-
 export default function LottieSplash({ onFinish }) {
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+
+  const handleAnimationFinish = () => {
+    setTimeout(() => {
+      // Fade out selama 500ms
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start(() => {
+        onFinish();
+      });
+    }, 5000); // Delay sebelum mulai fade-out
+  };
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <LottieView
-        source={require('../../assets/images/splash-screen.json')}
+        source={require('../../assets/images/bghouse.json')}
         autoPlay
-        loop={false}
-        onAnimationFinish={onFinish}
+        loop={true}
+        speed={0.5}
+        onAnimationFinish={handleAnimationFinish}
         style={styles.lottie}
       />
-    </View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#ffffff',
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
   },
   lottie: {
-    width: width * 0.7,
-    height: height * 0.4,
+    width: 200,
+    height: 200,
   },
 });

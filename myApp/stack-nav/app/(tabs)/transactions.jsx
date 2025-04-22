@@ -3,6 +3,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import React, { useState } from 'react';
 import { colors } from '../../assets/utils/colors'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const formatToRupiah = (amount) => {
   return 'Rp. ' + Math.abs(amount).toLocaleString('id-ID', {
@@ -57,6 +58,7 @@ export default function TransactionsScreen() {
     .reduce((sum, t) => sum + t.amount, 0);
 
   return (
+    <SafeAreaView style={{ flex: 1 }}>
     <ScrollView style={styles.container}
       contentContainerStyle={styles.scrollContent}>
       <View style={styles.header}>
@@ -152,6 +154,7 @@ export default function TransactionsScreen() {
 
       ))}
     </ScrollView>
+    </SafeAreaView>
   );
 }
 

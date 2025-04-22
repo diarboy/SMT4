@@ -7,6 +7,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../assets/lib/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Background from '@/assets/utils/background';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { ArrowLeft } from 'lucide-react-native';
+import { COLORS } from '../../constants/theme';
 
 export default function Signup() {
   const router = useRouter();
@@ -49,10 +52,11 @@ export default function Signup() {
 
   return (
     <Background>
+    <SafeAreaView style={{ flex: 1 }}>
     <View style={styles.container}>
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-        <View style={styles.backIconWrapper}>
-          <Ionicons name="chevron-back-outline" size={36} color={colors.primary} />
+        <View>
+          <ArrowLeft size={24} color={COLORS.white} />
         </View>
       </TouchableOpacity>
 
@@ -108,6 +112,7 @@ export default function Signup() {
       </TouchableOpacity>
       </View>
       </View>
+      </SafeAreaView>
     </Background>
   );
 }
@@ -118,6 +123,18 @@ const styles = StyleSheet.create({
     padding: 30,
     justifyContent: 'center',
     backgroundColor: 'transparent',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 40,
+    left: 30,
+    zIndex: 10,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
   title: {
     fontSize: 32,
@@ -183,19 +200,4 @@ const styles = StyleSheet.create({
     fontFamily: fonts.Bold,
     color: colors.primary,
   },
-  backButton: {
-    position: 'absolute',
-    top: 40,
-    left: 30,
-    zIndex: 10,
-  },
-  backIconWrapper: {
-    backgroundColor: colors.white,
-    borderRadius: 20,
-    paddingHorizontal: 5,
-    paddingVertical: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    opacity: 0.7,
-  },  
 });

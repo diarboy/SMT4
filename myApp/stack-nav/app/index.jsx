@@ -4,13 +4,43 @@ import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors } from '../assets/utils/colors';
 import { fonts } from '../assets/utils/fonts';
-import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import Background from '../assets/utils/background';
+import { StatusBar } from 'expo-status-bar';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
 
+  const translateX = useSharedValue(0);
+  const highlightStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: translateX.value }],
+    };
+  });
+
+  const handlePress = (type) => {
+    setActiveTab(type);
+    if (type === 'login') {
+      translateX.value = withTiming(0, { duration: 300 });
+      setTimeout(() => {
+      router.push('/home/login');
+    }, 300);
+    } else {
+      translateX.value = withTiming(160, { duration: 300 });
+      setTimeout(() => {
+        router.push('/home/signup');
+      }, 300);
+    }
+  };
+
+  const [activeTab, setActiveTab] = useState('login');
+  
+  useEffect(() => {
+    translateX.value = withTiming(activeTab === 'signup' ? 160 : 0);
+  }, [activeTab]);
+  
   useEffect(() => {
     const checkLogin = async () => {
       const userToken = await AsyncStorage.getItem('token');
@@ -32,47 +62,67 @@ export default function Home() {
   }
 
   return (
-  <Background>
-    <View style={styles.container}>
-      <View style={styles.logocontainer}>
-        <Animated.Image source={require("../assets/images/react-logo.png")} style={styles.logo}
-        entering={FadeIn.duration(1000).delay(100)}
-        />
-        <Animated.Text style={styles.titlelogo}
-          entering={FadeIn.duration(1000)}
-        > allbibek</Animated.Text>
-      </View>
-      <Animated.Image source={require("../assets/images/hero.png")} style={styles.hero}
-      entering={FadeIn.duration(1000).delay(200)}/>
-      <View style={styles.bodycontent}>
-        <Animated.View
-          entering={FadeInDown.duration(1000).springify().damping(12)}
-          style={{ alignItems: 'center' }}
-        >
-          <Text style={styles.title}>Hello! {'\n'}Welcome {'\n'}to MyApp</Text>
-          <Text style={styles.headbody}>Kelola semua kebutuhan finansial Anda dengan mudah melalui MyApp.</Text>
-          <Text style={styles.body}>Mulai dari belanja online, isi ulang pulsa, bayar tagihan listrik dan air, hingga transfer dana ke sesama pengguna, semua bisa dilakukan langsung dari aplikasi.</Text>
-          </Animated.View>
-        <Animated.View style={styles.buttonContainer}
-        entering={FadeInDown.duration(1000).delay(200).springify().damping(12)}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={[styles.loginButtonWrapper, { backgroundColor: colors.primary }]}
-              onPress={() => router.push('/home/login')}
-            >
-              <Text style={styles.loginButtonText}>Login</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.loginButtonWrapper}
-              onPress={() => router.push('/home/signup')}
-            >
-              <Text style={styles.signupButtonText}>SignUp</Text>
-            </TouchableOpacity>
-          </Animated.View>
-      </View>
-      </View>
-    </Background>
+    <Background>
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar style="auto" translucent backgroundColor="transparent" />
+          <View style={styles.container}>
+            <View style={styles.logocontainer}>
+              <Animated.Image source={require("../assets/images/react-logo.png")} style={styles.logo}
+              entering={FadeIn.duration(1000).delay(100)}
+              />
+              <Animated.Text style={styles.titlelogo}
+                entering={FadeIn.duration(1000)}
+              > allbibek</Animated.Text>
+            </View>
+            <Animated.Image source={require("../assets/images/hero.png")} style={styles.hero}
+            entering={FadeIn.duration(1000).delay(200)}/>
+            <View style={styles.bodycontent}>
+              <Animated.View
+                entering={FadeInDown.duration(1000).springify().damping(12)}
+                style={{ alignItems: 'center' }}
+              >
+                <Text style={styles.title}>Hello! {'\n'}Welcome {'\n'}to MyApp</Text>
+                <Text style={styles.headbody}>Kelola semua kebutuhan finansial Anda dengan mudah melalui MyApp.</Text>
+                <Text style={styles.body}>Mulai dari belanja online, isi ulang pulsa, bayar tagihan listrik dan air, hingga transfer dana ke sesama pengguna, semua bisa dilakukan langsung dari aplikasi.</Text>
+                </Animated.View>
+              <Animated.View style={styles.buttonContainer}
+              entering={FadeInDown.duration(1000).delay(200).springify().damping(12)}>
+                <Animated.View
+                    style={[
+                      {
+                        position: 'absolute',
+                        width: '50%',
+                        height: '100%',
+                        backgroundColor: colors.primary,
+                        borderRadius: 100,
+                        zIndex: -1,
+                      },
+                      highlightStyle,
+                    ]}
+                  />
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={[styles.loginButtonWrapper]}
+                    onPress={() => handlePress('login')}
+                  >
+                <Text style={[
+                  styles.loginButtonText,
+                  { color: activeTab === 'login' ? colors.white : colors.primary }]}>Login</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={styles.loginButtonWrapper}
+                    onPress={() => handlePress('signup')}
+                  >
+                <Text style={[
+                  styles.signupButtonText,
+                  { color: activeTab === 'signup' ? colors.white : colors.primary },]}>SignUp</Text>
+                  </TouchableOpacity>
+                </Animated.View>
+            </View>
+          </View>
+        </SafeAreaView>
+      </Background>
   );
 }  
 
@@ -87,7 +137,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 40,
     height: 40,
-    marginRight: 10,
   },
   titlelogo: {
     fontSize: 24,
@@ -141,9 +190,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderWidth: 2,
     borderColor: colors.primary,
-    width: '80%',
+    width: '90%',
     height: 60,
     borderRadius: 100,
+    position: 'relative',
+    overflow: 'hidden',
+
   },
   loginButtonWrapper: {
     justifyContent: 'center',

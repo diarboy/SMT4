@@ -38,7 +38,7 @@ const AnimatedLineChart = ({
   return (
     <View style={styles.container}>
       {title && <Text style={styles.title}>{title}</Text>}
-      }
+      
       <Animated.View style={[styles.chartContainer, animatedStyle]}>
         <LineChart
           data={data}

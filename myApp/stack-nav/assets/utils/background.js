@@ -1,4 +1,3 @@
-// assets/utils/background.js
 import React from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';

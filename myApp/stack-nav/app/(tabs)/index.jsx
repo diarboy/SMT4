@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useMemo, useCallback } from 'react'
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { colors } from '../../assets/utils/colors';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,6 +10,9 @@ import NotificationModal from '../../components/modals/notification';
 import SendMoneyModal from '../../components/modals/sendmoney';
 import Background from '../../assets/utils/background';
 import RequestModal from '../../components/modals/request';
+import { StatusBar } from 'expo-status-bar';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import CustomBottomSheet from '@/components/modals/BottomSheet';
 
 const Home = () => {
   const { session } = useAuth();
@@ -30,11 +33,17 @@ const Home = () => {
     setRequestModalVisible(!requestModalVisible);
   };
   
-
   const userName = session?.user?.user_metadata?.name || 'Dude';
+  
+  const sheetRef = useRef(null);
+  const handleOpenSheet = () => {
+    sheetRef.current?.present();
+  };
 
   return (
-    <Background>
+  <Background>
+    <SafeAreaView style={{ flex: 1 }}>
+    <StatusBar style="auto" translucent backgroundColor="transparent" />
     <ScrollView style={styles.scrollcontainer} showsVerticalScrollIndicator={false}>
       <View style={styles.headerContainer}>
         <View style={styles.logocontainer}>
@@ -44,13 +53,13 @@ const Home = () => {
         
         <View style={styles.iconContainer}>
           <TouchableOpacity onPress={() => router.push('/profile/account')} style={styles.iconButton}>
-            <Ionicons name="person-outline" size={24} color="#007aff" />
+            <Ionicons name="person-outline" size={24} color={colors.dark} />
           </TouchableOpacity>
           {/* <TouchableOpacity onPress={() => router.push('/(tabs)/profile/')} style={styles.iconButton}>
             <Ionicons name="lock-closed-outline" size={24} color="#007aff" />
           </TouchableOpacity> */}
           <TouchableOpacity onPress={toggleNotificationModal} style={styles.iconButton}>
-            <Ionicons name="notifications-outline" size={24} color="#007aff" />
+            <Ionicons name="notifications-outline" size={24} color={colors.dark} />
           </TouchableOpacity>
           </View>
       </View>
@@ -87,7 +96,7 @@ const Home = () => {
           <TouchableOpacity onPress={toggleRequestModal} intensity={20} style={styles.actionCard}>
             <Text style={styles.actionTitle}>Request</Text>
           </TouchableOpacity>
-          <TouchableOpacity intensity={20} style={styles.actionCard}>
+          <TouchableOpacity intensity={20} style={styles.actionCard} onPress={handleOpenSheet}>
             <Text style={styles.actionTitle}>Top Up</Text>
           </TouchableOpacity>
         </ScrollView>
@@ -125,6 +134,13 @@ const Home = () => {
       <SendMoneyModal visible={sendMoneyModalVisible} onClose={toggleSendMoneyModal} />
       <RequestModal visible={requestModalVisible} onClose={toggleRequestModal} />
       </ScrollView>
+      
+      <CustomBottomSheet ref={sheetRef}>
+        <View style={{ padding: 20 }}>
+          <Text style={{ fontSize: 18 }}>Ini konten di dalam sheet!</Text>
+        </View>
+      </CustomBottomSheet>
+      </SafeAreaView>
     </Background>
   );
 };

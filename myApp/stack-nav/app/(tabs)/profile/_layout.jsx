@@ -13,7 +13,7 @@ export default function ProfileLayout() {
     screenOptions={{
       headerShown: true,
       swipeEnabled: true,
-      drawerType: 'slide',
+      drawerType: 'slide', //'front', 'back', 'permanent'
       drawerActiveTintColor: '#007aff',
       drawerInactiveTintColor: '#aaa',
       drawerLabelStyle: { marginLeft: 5, fontSize: 18 },

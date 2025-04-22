@@ -1,11 +1,25 @@
-import React from 'react'
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import React, { useCallback, useRef, useState, useEffect } from 'react'
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'
+import CustomBottomSheet from '@/components/modals/BottomSheet'
 
 const test = () => {
-  return (
+const SheetRef = useRef(null);
+const customSheetRef = useRef(null);
 
+  const [isOpen, setIsOpen] = useState(true);
+
+  const snapPoints = ["40%", "60%", "100%"];
+
+  const handlesnapPress = useCallback((index) => {
+  SheetRef.current?.snapToIndex(index);
+  setIsOpen(true);  
+  }, []);
+  
+  return (
+  <View style={{ flex: 1 }}>
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <Animated.View 
         entering={FadeInDown.delay(200)}
@@ -28,13 +42,13 @@ const test = () => {
         entering={FadeInRight.delay(400)}
         style={styles.quickActionsContainer}>
         <Text style={styles.sectionTitle}>Quick Actions</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <BlurView intensity={20} style={styles.actionCard}>
-            <Text style={styles.actionTitle}>Send Money</Text>
-          </BlurView>
-          <BlurView intensity={20} style={styles.actionCard}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <TouchableOpacity onPress={() => handlesnapPress(0)} style={styles.actionCard}>
+              <Text style={styles.actionTitle}>Send Money</Text>
+            </TouchableOpacity>
+          <TouchableOpacity style={styles.actionCard} onPress={() => customSheetRef.current?.present(1)}>
             <Text style={styles.actionTitle}>Request</Text>
-          </BlurView>
+          </TouchableOpacity>
           <BlurView intensity={20} style={styles.actionCard}>
             <Text style={styles.actionTitle}>Top Up</Text>
           </BlurView>
@@ -56,6 +70,31 @@ const test = () => {
         ))}
       </Animated.View>
     </ScrollView>
+      
+      {/* Bottom Sheet Default */}
+      <BottomSheet
+        backgroundStyle={{ borderRadius: 20, backgroundColor: 'white' }}
+        ref={SheetRef}
+        snapPoints={snapPoints}
+        enablePanDownToClose={true}
+        onClose={() => setIsOpen(false)}
+      >
+        <BottomSheetView style={{ height: 400 }}>
+          <Text>Hello!</Text>
+        </BottomSheetView>
+      </BottomSheet>
+
+      {/* Bottom Sheet Ardi */}     
+      <CustomBottomSheet
+        ref={customSheetRef}
+        snapPoints={snapPoints}
+        onClose={() => setIsOpen(false)}
+        >
+        <BottomSheetView style={{ height: 400 }}>
+          <Text>Hello!</Text>
+        </BottomSheetView>
+      </CustomBottomSheet>
+    </View>
   );
 }
 

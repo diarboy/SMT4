@@ -7,6 +7,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors } from '../assets/utils/colors';
 import { AuthProvider } from '../context/AuthContext';
 import LottieSplash from './home/splash';
+import 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { StatusBar } from 'expo-status-bar';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -55,11 +59,17 @@ export default function RootLayout() {
   }
   
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <StatusBar style="auto" translucent backgroundColor="transparent" />
+
       <AuthProvider>
         <Stack
           screenOptions={{ headerShown: false }}
           initialRouteName={isLoggedIn ? '(tabs)' : 'index'}
           />
-      </AuthProvider>
+        </AuthProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
   );
 }
