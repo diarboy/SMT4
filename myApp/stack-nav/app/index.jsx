@@ -67,7 +67,7 @@ export default function Home() {
         <StatusBar style="auto" translucent backgroundColor="transparent" />
           <View style={styles.container}>
             <View style={styles.logocontainer}>
-              <Animated.Image source={require("../assets/images/react-logo.png")} style={styles.logo}
+              <Animated.Image source={require("../assets/images/adaptive-icon.png")} style={styles.logo}
               entering={FadeIn.duration(1000).delay(100)}
               />
               <Animated.Text style={styles.titlelogo}
@@ -135,14 +135,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   logo: {
-    width: 40,
-    height: 40,
+    width: 60,
+    height: 60,
   },
   titlelogo: {
     fontSize: 24,
     fontFamily: fonts.Comfort2,
     letterSpacing: 2,
     marginBottom: 0,
+    marginLeft: -10
   },
   container: {
     flex: 1,

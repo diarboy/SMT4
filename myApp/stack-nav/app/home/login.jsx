@@ -12,6 +12,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'lucide-react-native';
 import { COLORS } from '../../constants/theme';
+import PopupAlert from '../../components/modals/PopupAlert';
 
 export default function Login() {
   const router = useRouter();
@@ -21,21 +22,36 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertType, setAlertType] = useState('success'); // 'error' atau 'success'
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+
+  const showAlert = (type, title, message) => {
+    setAlertType(type);
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setAlertVisible(true);
+  };
+
   const handleLogin = async () => {
     setLoading(true);
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
-      Alert.alert('Login Gagal', error.message);
+      showAlert('Login Gagal', error.message);
     } else {
-      Alert.alert('Berhasil', 'Login berhasil');
+      showAlert('Berhasil', 'Login berhasil');
       
       await AsyncStorage.setItem('session', JSON.stringify(data.session));
       await AsyncStorage.setItem('name', data.user?.user_metadata?.name || '');
       await AsyncStorage.setItem('email', data.user?.email || '');
       await AsyncStorage.setItem('token', data.session?.access_token || '');
       await login(data.session);
-      router.replace('(tabs)');
+
+      setTimeout(() => {
+        router.replace('(tabs)');
+      }, 1000);
     }
     setLoading(false);
   };
@@ -110,8 +126,46 @@ export default function Login() {
         <TouchableOpacity onPress={() => router.replace('/home/signup')}>
           <Text style={styles.signupLink}>Daftar</Text>
          </TouchableOpacity>
+          </View>
+          
+          <TouchableOpacity
+            style={{
+              backgroundColor: alertType === 'error' ? '#f44336' : '#4caf50',
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              borderRadius: 8,
+              alignSelf: 'center',
+              marginTop: 20,
+            }}
+            onPress={() => showAlert('success', 'Berhasil!', 'Kamu menekan tombol alert.')}
+          >
+            <Text style={{ color: 'white', fontWeight: '600' }}>Test Alert</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{
+              backgroundColor: alertType === 'error' ? '#f44336' : '#4caf50', //f44336 merah, 4caf50 hijau
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              borderRadius: 8,
+              alignSelf: 'center',
+              marginTop: 20,
+            }}
+            onPress={() => showAlert('error', 'Error!', 'Kamu menekan tombol alert.')}
+          >
+            <Text style={{ color: 'white', fontWeight: '600' }}>Gagal</Text>
+          </TouchableOpacity>
+          
         </View>
-        </View>
+
+        <PopupAlert
+        visible={alertVisible}
+        title={alertTitle}
+        message={alertMessage}
+        type={alertType}
+        onClose={() => setAlertVisible(false)}
+        />
+        
         </SafeAreaView>
       </Background>
   );

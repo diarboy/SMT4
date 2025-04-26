@@ -47,7 +47,7 @@ const Home = () => {
     <ScrollView style={styles.scrollcontainer} showsVerticalScrollIndicator={false}>
       <View style={styles.headerContainer}>
         <View style={styles.logocontainer}>
-          <Image source={require("../../assets/images/react-logo.png")} style={styles.logo} />
+          <Image source={require("../../assets/images/adaptive-icon.png")} style={styles.logo} />
           <Text style={styles.titlelogo}>allbibek</Text>
         </View>
         
@@ -65,7 +65,8 @@ const Home = () => {
       </View>
       
       <View style={styles.container}>
-        <Text style={styles.title}>Welcome{'\n'}Back👋{userName}!</Text>
+        <Text style={styles.title}>Welcome Back👋</Text>
+        <Text style={styles.titlename}>{userName}!</Text>
       </View>
 
       <Animated.View 
@@ -155,14 +156,13 @@ const Home = () => {
     },
     logocontainer: {
       flexDirection: 'row',
-      // alignItems: 'center',
+      alignItems: 'center',
       justifyContent: 'flex-start',
       paddingHorizontal: 5,
     },
     logo: {
-      width: 40,
-      height: 40,
-      marginRight: 10,
+      width: 50,
+      height: 50,
     },
     titlelogo: {
       fontSize: 24,
@@ -176,7 +176,6 @@ const Home = () => {
     iconButton: {
       marginHorizontal: 5,
     },
-  
     container: {
       paddingHorizontal: 15,
       marginBottom: 20,
@@ -187,14 +186,22 @@ const Home = () => {
     },
     scrollcontainer: {
       flex: 1,
-
     },
     title: {
-      fontSize: 32,
+      fontSize: 24,
       fontFamily: fonts.Manrope,
       color: colors.black,
       letterSpacing: 1,
       marginTop: 10,
+      alignSelf: 'left',
+      lineHeight: 24,
+      paddingHorizontal: 10,
+    },
+    titlename: {
+      fontSize: 32,
+      fontFamily: fonts.Manrope,
+      color: colors.black,
+      letterSpacing: 1,
       alignSelf: 'left',
       // lineHeight: 24,
       paddingHorizontal: 10,
@@ -238,7 +245,7 @@ const Home = () => {
       fontSize: 14,
     },
     statAmount: {
-      color: '#ffffff',
+      color: colors.white,
       fontSize: 16,
       fontWeight: '600',
       marginTop: 4,

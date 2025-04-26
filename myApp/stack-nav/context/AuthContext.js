@@ -31,7 +31,26 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        setToken(session.access_token);
+        setSession(session);
+        setIsAuthenticated(true);
+        AsyncStorage.setItem('token', session.access_token);
+        AsyncStorage.setItem('session', JSON.stringify(session));
+      } else {
+        setToken(null);
+        setSession(null);
+        setIsAuthenticated(false);
+        AsyncStorage.removeItem('token');
+        AsyncStorage.removeItem('session');
+      }
+    });
+
     loadAuthData();
+    return () => {
+      authListener?.subscription?.unsubscribe();
+    };
   }, []);
 
   // Fungsi login, simpan token dan session ke AsyncStorage
