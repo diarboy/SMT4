@@ -1,4 +1,4 @@
-# Welcome to Stack Nav 👋
+# Welcome to [Stack Nav](exp://u.expo.dev/4fb3ff7d-a75f-4f4f-bd0d-993ff44a5c00/group/785c5952-e394-4796-988a-b5c161dcab6c)👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
