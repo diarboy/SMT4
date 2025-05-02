@@ -1,6 +1,7 @@
-# Welcome to [Stack Nav](exp://u.expo.dev/4fb3ff7d-a75f-4f4f-bd0d-993ff44a5c00/group/785c5952-e394-4796-988a-b5c161dcab6c)👋
+# Welcome to Stack Nav👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is an [Expo](https://expo.dev) [Stack Nav](exp://u.expo.dev/4fb3ff7d-a75f-4f4f-bd0d-993ff44a5c00/group/785c5952-e394-4796-988a-b5c161dcab6c) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+eas update --branch main --message "commit message"
 
 myApp/
 └── stack-nav/
