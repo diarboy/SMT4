@@ -1,6 +1,6 @@
 # Welcome to Stack Nav👋
 
-This is an [Expo](https://expo.dev) [Stack Nav](exp://u.expo.dev/4fb3ff7d-a75f-4f4f-bd0d-993ff44a5c00/group/785c5952-e394-4796-988a-b5c161dcab6c) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is an [Expo](https://expo.dev) [Stack Nav](https://expo.dev/preview/update?message=Merge%20branch%20'main'%20of%20https%3A%2F%2Fgithub.com%2Fdiarboy%2FSMT4&updateRuntimeVersion=1.0.0&createdAt=2025-05-02T04%3A54%3A10.674Z&slug=exp&projectId=4fb3ff7d-a75f-4f4f-bd0d-993ff44a5c00&group=78aff2de-2de9-4ba3-a305-a3464e90b94b) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 eas update --branch main --message "commit message"
 
 myApp/
@@ -73,3 +73,4 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- exp://u.expo.dev/4fb3ff7d-a75f-4f4f-bd0d-993ff44a5c00/group/785c5952-e394-4796-988a-b5c161dcab6c
