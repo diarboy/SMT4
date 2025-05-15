@@ -4,8 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SignIn from './Screens/Login.js';
 import SignUp from './Screens/SignUp.js';
-import HomeScreen from './pemrograman-mobile/meet-06/stack-nav/Screens/HomeScreen.js';
-import ProfileScreen from './pemrograman-mobile/meet-06/stack-nav/Screens/ProfileScreen.js';
+import HomeScreen from '../pemrograman-mobile/meet-06/stack-nav/Screens/HomeScreen.js';
+import ProfileScreen from '../pemrograman-mobile/meet-06/stack-nav/Screens/ProfileScreen.js';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
